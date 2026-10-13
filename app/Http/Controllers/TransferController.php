@@ -21,6 +21,9 @@ class TransferController extends Controller
 
     public function store(Request $r)
     {
+        // Probel, tire va boshqa belgilar bilan nusxalangan raqamni qabul qilish
+        $r->merge(['target' => preg_replace('/\D/', '', (string) $r->input('target'))]);
+
         $data = $r->validate([
             'from_account_id' => 'required|integer',
             'kind' => 'required|in:internal,external',

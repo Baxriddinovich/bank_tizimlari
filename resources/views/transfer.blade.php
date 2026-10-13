@@ -13,7 +13,7 @@
       <label><input type="radio" name="kind" value="internal" @checked(old('kind','internal')==='internal')> Ichki (bank ichida)</label>
       <label><input type="radio" name="kind" value="external" @checked(old('kind')==='external')> Tashqi (boshqa bank)</label>
     </div>
-    <div><label class="text-sm">Qabul qiluvchi hisob/karta (16 xona)</label><input name="target" value="{{ old('target') }}" inputmode="numeric" maxlength="16" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono">
+    <div><label class="text-sm">Qabul qiluvchi hisob/karta (16 xona)</label><input name="target" value="{{ old('target') }}" id="target" inputmode="numeric" autocomplete="off" placeholder="8600 0000 0000 0000" maxlength="23" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono">
       @error('target')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror</div>
     <div><label class="text-sm">Summa (so'm)</label><input name="amount" value="{{ old('amount') }}" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2">
       @error('amount')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror</div>
@@ -21,4 +21,15 @@
     <button class="w-full rounded-lg bg-emerald-600 text-white py-2.5 font-medium hover:bg-emerald-700">O'tkazish</button>
   </form>
 </div>
+<script>
+(function () {
+  var el = document.getElementById('target');
+  function fmt() {
+    var d = el.value.replace(/\D/g, '').slice(0, 16);
+    el.value = d.replace(/(.{4})/g, '$1 ').trim();
+  }
+  el.addEventListener('input', fmt);
+  fmt();
+})();
+</script>
 @endsection

@@ -221,4 +221,15 @@ class BankTest extends TestCase
         $this->actingAs($a)->get('/admin')->assertForbidden();
         $this->actingAs($a)->get('/admin/transactions')->assertForbidden();
     }
+
+    public function test_transfer_accepts_card_number_with_spaces(): void
+    {
+        $a = $this->user('customer', 1_000_00);
+        $b = $this->user();
+        $spaced = trim(chunk_split($b->accounts->first()->number, 4, ' '));
+        $this->actingAs($a)->post('/transfer', [
+            'from_account_id' => $a->accounts->first()->id, 'kind' => 'internal', 'target' => $spaced, 'amount' => '100',
+        ])->assertSessionHasNoErrors()->assertRedirect();
+        $this->assertSame(100_00, $b->accounts->first()->fresh()->balance);
+    }
 }
